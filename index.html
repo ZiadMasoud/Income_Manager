@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+
+    <title>Home Money Manager</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Home Money Manager</h1>
+      <!-- ============================Salary============================ -->
+      <section id="salary-section">
+        <h2>Enter Monthly Salary</h2>
+        <input type="number" id="salary-input" placeholder="Enter salary" />
+        <p id="remaining-balance"></p>
+
+        <button id="save-salary">Save Salary</button>
+      </section>
+      <!-- ============================Category============================ -->
+      <section id="category-section">
+        <h3>Manage Categories</h3>
+        <input type="text" id="category-input" placeholder="Enter category" />
+        <button id="add-category">Add Category</button>
+        <button id="toggle-category-table">Show Categories</button>
+        <div id="category-container" style="display: none">
+          <table id="category-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="category-table-body">
+              <!-- Categories will be dynamically added here -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <!-- ============================Expense============================ -->
+      <section id="expense-section">
+        <h2>Add Expense</h2>
+        <input type="text" id="item-name" placeholder="Item name" />
+        <input type="number" id="item-quantity" placeholder="Quantity" />
+        <input type="number" id="item-cost" placeholder="Cost per unit" />
+        <input type="text" id="item-store" placeholder="Store Name" />
+
+        <select id="item-category">
+            <option value="Random">Random</option>
+        </select>
+        <button id="add-expense">Add Expense</button>
+      </section>
+      <!-- ============================Expense-Summary============================ -->
+      <section id="expense-summary">
+        <h2>Expense Summary</h2>
+        <table id="expense-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Item</th>
+              <th>Quantity</th>
+              <th>Cost per Unit</th>
+              <th>Total Cost</th>
+              <th>Category</th>
+              <th>Store</th>
+              <th>Delete Row</th>
+            </tr>
+          </thead>
+          <tbody id="expense-list"></tbody>
+        </table>
+        <button id="print-expenses">Print Expenses as PDF</button>
+        <button id="clear-expenses">Clear All</button>
+      </section>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
