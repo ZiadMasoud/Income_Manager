@@ -65,4 +65,4 @@ This project is licensed under the MIT License. Feel free to use and modify the 
 
 ---
 
-Developed by **Ziad Masoud**.
+Developed by **Ziad Masoud**. https://ziadmasoud.github.io/Home-Money-Manager/
