@@ -59,6 +59,10 @@ These libraries are included via CDN, so no further installation is required.
 3. **Search and Sort**: Implement search functionality and sorting options to filter expenses by item, store, category, or cost.
 4. **User Interface Enhancements**: Improve the UI with more responsive design for better usability across devices.
 
+## Acknowledgments
+
+This project was assisted by **ChatGPT**, which helped in generating code and providing guidance throughout the development process.
+
 ## License
 
 This project is licensed under the MIT License. Feel free to use and modify the code as per the terms of the license.
