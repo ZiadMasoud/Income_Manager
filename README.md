@@ -65,7 +65,7 @@ This project was assisted by **ChatGPT**, which helped in generating code and pr
 
 ## License
 
-This project is licensed under the MIT License. Feel free to use and modify the code as per the terms of the license.
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT). Feel free to use and modify the code as per the terms of the license.
 
 ---
 
