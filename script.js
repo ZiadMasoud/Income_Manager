@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("item-name").value = "";
       document.getElementById("item-quantity").value = "";
       document.getElementById("item-cost").value = "";
-      document.getElementById("item-store").value = ""; // Clear store input
+      document.getElementById("item-store").value = "";
       document.getElementById("item-category").value = "";
 
       // Update expense summary display
@@ -155,9 +155,14 @@ document.addEventListener("DOMContentLoaded", () => {
     let expenseList = document.getElementById("expense-list");
     expenseList.innerHTML = ""; // Clear existing table rows
     let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+    let totalCostElement = document.getElementById("total-cost");
 
+    let totalCost = 0; // Initialize total cost accumulator
     expenses.forEach((exp, index) => {
       let row = document.createElement("tr");
+
+      let totalExpenseCost = exp.total_cost;
+      totalCost += totalExpenseCost;
 
       // Create cells for each piece of data
       row.innerHTML = `
@@ -173,6 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       expenseList.appendChild(row);
     });
+    totalCostElement.textContent = totalCost.toFixed(2);
 
     // Attach event listeners to all delete buttons
     document.querySelectorAll(".delete").forEach((button) => {

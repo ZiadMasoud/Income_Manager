@@ -40,8 +40,10 @@ button {
 }
 .delete {
   border: none;
+  margin-left: 15px;
+  margin-top: -3px;
   border-radius: 4px;
-  background-color: red;
+  background-color: rgb(255, 0, 0);
   color: white;
   cursor: pointer;
 }
