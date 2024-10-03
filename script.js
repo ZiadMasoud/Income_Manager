@@ -6,44 +6,40 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("salary-input").value = "";
     updateRemainingBalance();
   });
-  // Rest salary
+
+  // Reset salary
   document.getElementById("rest-salary").addEventListener("click", function () {
-    let salary = (document.getElementById("salary-input").value = 0);
+    let salary = 0;
     localStorage.setItem("monthlySalary", salary);
     document.getElementById("salary-input").value = "";
-    document.getElementById("remaining-balance").textContent =
-      "Remaining Balance: 0";
+    document.getElementById("remaining-balance").textContent = "Remaining Balance: 0";
   });
-  /* =================================================================================== */
-  // Add a new category to the list and store it in localStorage
-  document
-    .getElementById("add-category")
-    .addEventListener("click", function () {
-      let category = document.getElementById("category-input").value;
-      if (category) {
-        let categories = JSON.parse(localStorage.getItem("categories")) || [];
-        categories.push(category);
-        localStorage.setItem("categories", JSON.stringify(categories));
-        displayCategories();
-        document.getElementById("category-input").value = "";
-      } else {
-        alert("Please enter a category.");
-      }
-    });
 
-  // *Show/Hide category table
-  document
-    .getElementById("toggle-category-table")
-    .addEventListener("click", function () {
-      let categoryContainer = document.getElementById("category-container");
-      if (categoryContainer.style.display === "none") {
-        categoryContainer.style.display = "block";
-        this.textContent = "Hide Categories";
-      } else {
-        categoryContainer.style.display = "none";
-        this.textContent = "Show Categories";
-      }
-    });
+  // Add a new category to the list and store it in localStorage
+  document.getElementById("add-category").addEventListener("click", function () {
+    let category = document.getElementById("category-input").value;
+    if (category) {
+      let categories = JSON.parse(localStorage.getItem("categories")) || [];
+      categories.push(category);
+      localStorage.setItem("categories", JSON.stringify(categories));
+      displayCategories();
+      document.getElementById("category-input").value = "";
+    } else {
+      alert("Please enter a category.");
+    }
+  });
+
+  // Show/Hide category table
+  document.getElementById("toggle-category-table").addEventListener("click", function () {
+    let categoryContainer = document.getElementById("category-container");
+    if (categoryContainer.style.display === "none") {
+      categoryContainer.style.display = "block";
+      this.textContent = "Hide Categories";
+    } else {
+      categoryContainer.style.display = "none";
+      this.textContent = "Show Categories";
+    }
+  });
 
   // Function to display categories in the table and dropdown
   function displayCategories() {
@@ -51,6 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
     categoryTableBody.innerHTML = ""; // Clear existing rows
 
     let categories = JSON.parse(localStorage.getItem("categories")) || [];
+    let transactions = JSON.parse(localStorage.getItem("expenses")) || [];
+
     categories.forEach((cat, index) => {
       let row = document.createElement("tr");
 
@@ -58,6 +56,14 @@ document.addEventListener("DOMContentLoaded", () => {
       let categoryCell = document.createElement("td");
       categoryCell.textContent = cat;
       row.appendChild(categoryCell);
+
+      // Calculate and display total cost per category
+      let totalCostCell = document.createElement("td");
+      let totalCostData = transactions.reduce((acc, transaction) => {
+        return transaction.category === cat ? acc + transaction.total_cost : acc;
+      }, 0);
+      totalCostCell.textContent = totalCostData.toFixed(2); // Fix it to 2 decimal places
+      row.appendChild(totalCostCell);
 
       // Add delete button to the row
       let actionCell = document.createElement("td");
@@ -97,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("categories", JSON.stringify(categories)); // Update local storage
     displayCategories(); // Refresh the category table and dropdown
   }
-  /* =================================================================================== */
+
   // Update the remaining balance after calculating total expenses
   function updateRemainingBalance() {
     let salary = localStorage.getItem("monthlySalary") || 0;
@@ -106,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let remainingBalance = salary - totalExpenses;
     document.getElementById(
       "remaining-balance"
-    ).textContent = `Remaining Balance: ${remainingBalance}`;
+    ).textContent = `Remaining Balance: ${remainingBalance.toFixed(2)}`;
   }
 
   // Add a new expense and save it to local storage
@@ -149,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Please fill in all fields.");
     }
   });
-  /* =================================================================================== */
+
   // Display the list of expenses
   function displayExpenses() {
     let expenseList = document.getElementById("expense-list");
@@ -170,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <td>${exp.name}</td>
           <td>${exp.quantity}</td>
           <td>${exp.cost_per_unit}</td>
-          <td>${exp.total_cost}</td>
+          <td>${exp.total_cost.toFixed(2)}</td>
           <td>${exp.category}</td>
           <td>${exp.store}</td>
           <td><button class="delete" data-index="${index}">Delete</button></td>
@@ -188,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
-  /* =================================================================================== */
+
   // Function to delete an expense from local storage and refresh the UI
   function deleteExpense(index) {
     let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
@@ -197,78 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
     displayExpenses(); // Refresh the expense list
     updateRemainingBalance(); // Update the balance after deletion
   }
-  /* =================================================================================== */
-  // PDF Generation Code
-  document
-    .getElementById("print-expenses")
-    .addEventListener("click", function () {
-      const { jsPDF } = window.jspdf;
 
-      // Create a new instance of jsPDF
-      const pdf = new jsPDF();
-
-      // Add title and date
-      pdf.text("Monthly Expenses Report", 10, 10);
-      const date = new Date();
-      pdf.text(`Date: ${date.toLocaleDateString()}`, 10, 20);
-
-      // Get the table data
-      const tableData = [];
-      const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
-      expenses.forEach((exp) => {
-        const row = [
-          `${date.toLocaleDateString()}`,
-          exp.name,
-          exp.quantity,
-          exp.cost_per_unit,
-          exp.total_cost,
-          exp.category,
-          exp.store,
-        ];
-        tableData.push(row);
-      });
-
-      // Add the table to the PDF
-      pdf.autoTable({
-        head: [
-          [
-            "Date",
-            "Item",
-            "Quantity",
-            "Cost per Unit",
-            "Total Cost",
-            "Category",
-            "Store",
-          ],
-        ],
-        body: tableData,
-        startY: 30,
-      });
-
-      // Save the PDF
-      pdf.save("monthly_expenses_report.pdf");
-    });
-  /* =================================================================================== */
-  // Clear all expenses and reset the form
-  document
-    .getElementById("clear-expenses")
-    .addEventListener("click", function () {
-      localStorage.removeItem("expenses");
-      localStorage.removeItem("monthlySalary");
-
-      document.getElementById("salary-input").value = "";
-      document.getElementById("item-name").value = "";
-      document.getElementById("item-quantity").value = "";
-      document.getElementById("item-cost").value = "";
-      document.getElementById("item-store").value = "";
-      document.getElementById("expense-list").innerHTML = "";
-      document.getElementById("remaining-balance").textContent =
-        "Remaining Balance: 0";
-
-      displayCategories();
-      displayExpenses(); // Refresh the expense list after clearing
-    });
-  /* =================================================================================== */
   // Initialize data on page load
   window.onload = function () {
     displayCategories();
