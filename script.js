@@ -12,34 +12,39 @@ document.addEventListener("DOMContentLoaded", () => {
     let salary = 0;
     localStorage.setItem("monthlySalary", salary);
     document.getElementById("salary-input").value = "";
-    document.getElementById("remaining-balance").textContent = "Remaining Balance: 0";
+    document.getElementById("remaining-balance").textContent =
+      "Remaining Balance: 0";
   });
 
   // Add a new category to the list and store it in localStorage
-  document.getElementById("add-category").addEventListener("click", function () {
-    let category = document.getElementById("category-input").value;
-    if (category) {
-      let categories = JSON.parse(localStorage.getItem("categories")) || [];
-      categories.push(category);
-      localStorage.setItem("categories", JSON.stringify(categories));
-      displayCategories();
-      document.getElementById("category-input").value = "";
-    } else {
-      alert("Please enter a category.");
-    }
-  });
+  document
+    .getElementById("add-category")
+    .addEventListener("click", function () {
+      let category = document.getElementById("category-input").value;
+      if (category) {
+        let categories = JSON.parse(localStorage.getItem("categories")) || [];
+        categories.push(category);
+        localStorage.setItem("categories", JSON.stringify(categories));
+        displayCategories();
+        document.getElementById("category-input").value = "";
+      } else {
+        alert("Please enter a category.");
+      }
+    });
 
   // Show/Hide category table
-  document.getElementById("toggle-category-table").addEventListener("click", function () {
-    let categoryContainer = document.getElementById("category-container");
-    if (categoryContainer.style.display === "none") {
-      categoryContainer.style.display = "block";
-      this.textContent = "Hide Categories";
-    } else {
-      categoryContainer.style.display = "none";
-      this.textContent = "Show Categories";
-    }
-  });
+  document
+    .getElementById("toggle-category-table")
+    .addEventListener("click", function () {
+      let categoryContainer = document.getElementById("category-container");
+      if (categoryContainer.style.display === "none") {
+        categoryContainer.style.display = "block";
+        this.textContent = "Hide Categories";
+      } else {
+        categoryContainer.style.display = "none";
+        this.textContent = "Show Categories";
+      }
+    });
 
   // Function to display categories in the table and dropdown
   function displayCategories() {
@@ -60,7 +65,9 @@ document.addEventListener("DOMContentLoaded", () => {
       // Calculate and display total cost per category
       let totalCostCell = document.createElement("td");
       let totalCostData = transactions.reduce((acc, transaction) => {
-        return transaction.category === cat ? acc + transaction.total_cost : acc;
+        return transaction.category === cat
+          ? acc + transaction.total_cost
+          : acc;
       }, 0);
       totalCostCell.textContent = totalCostData.toFixed(2); // Fix it to 2 decimal places
       row.appendChild(totalCostCell);
@@ -203,7 +210,77 @@ document.addEventListener("DOMContentLoaded", () => {
     displayExpenses(); // Refresh the expense list
     updateRemainingBalance(); // Update the balance after deletion
   }
+  /* =================================================================================== */
+  // PDF Generation Code
+  document
+    .getElementById("print-expenses")
+    .addEventListener("click", function () {
+      const { jsPDF } = window.jspdf;
 
+      // Create a new instance of jsPDF
+      const pdf = new jsPDF();
+
+      // Add title and date
+      pdf.text("Monthly Expenses Report", 10, 10);
+      const date = new Date();
+      pdf.text(`Date: ${date.toLocaleDateString()}`, 10, 20);
+
+      // Get the table data
+      const tableData = [];
+      const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+      expenses.forEach((exp) => {
+        const row = [
+          `${date.toLocaleDateString()}`,
+          exp.name,
+          exp.quantity,
+          exp.cost_per_unit,
+          exp.total_cost,
+          exp.category,
+          exp.store,
+        ];
+        tableData.push(row);
+      });
+
+      // Add the table to the PDF
+      pdf.autoTable({
+        head: [
+          [
+            "Date",
+            "Item",
+            "Quantity",
+            "Cost per Unit",
+            "Total Cost",
+            "Category",
+            "Store",
+          ],
+        ],
+        body: tableData,
+        startY: 30,
+      });
+
+      // Save the PDF
+      pdf.save("monthly_expenses_report.pdf");
+    });
+  /* =================================================================================== */
+  // Clear all expenses and reset the form
+  document
+    .getElementById("clear-expenses")
+    .addEventListener("click", function () {
+      localStorage.removeItem("expenses");
+      localStorage.removeItem("monthlySalary");
+
+      document.getElementById("salary-input").value = "";
+      document.getElementById("item-name").value = "";
+      document.getElementById("item-quantity").value = "";
+      document.getElementById("item-cost").value = "";
+      document.getElementById("item-store").value = "";
+      document.getElementById("expense-list").innerHTML = "";
+      document.getElementById("remaining-balance").textContent =
+        "Remaining Balance: 0";
+
+      displayCategories();
+      displayExpenses(); // Refresh the expense list after clearing
+    });
   // Initialize data on page load
   window.onload = function () {
     displayCategories();
