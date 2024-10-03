@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("remaining-balance").textContent =
       "Remaining Balance: 0";
   });
-
+  /* =================================================================================== */
   // Add a new category to the list and store it in localStorage
   document
     .getElementById("add-category")
@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ? acc + transaction.total_cost
           : acc;
       }, 0);
-      totalCostCell.textContent = totalCostData.toFixed(2); // Fix it to 2 decimal places
+      totalCostCell.textContent = totalCostData.toFixed(2);
       row.appendChild(totalCostCell);
 
       // Add delete button to the row
@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("categories", JSON.stringify(categories)); // Update local storage
     displayCategories(); // Refresh the category table and dropdown
   }
-
+  /* =================================================================================== */
   // Update the remaining balance after calculating total expenses
   function updateRemainingBalance() {
     let salary = localStorage.getItem("monthlySalary") || 0;
@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Please fill in all fields.");
     }
   });
-
+  /* =================================================================================== */
   // Display the list of expenses
   function displayExpenses() {
     let expenseList = document.getElementById("expense-list");
@@ -201,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
-
+  /* =================================================================================== */
   // Function to delete an expense from local storage and refresh the UI
   function deleteExpense(index) {
     let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
@@ -281,6 +281,8 @@ document.addEventListener("DOMContentLoaded", () => {
       displayCategories();
       displayExpenses(); // Refresh the expense list after clearing
     });
+  /* =================================================================================== */
+
   // Initialize data on page load
   window.onload = function () {
     displayCategories();
