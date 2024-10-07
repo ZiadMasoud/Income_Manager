@@ -1,4 +1,4 @@
-# Home Money Manager (Proto Type)
+# Home Money Manager (ProtoType)
 
 ## Description
 
